@@ -56,7 +56,7 @@ export async function dev() {
                 await event.result.close()
 
                 try {
-                    await management.SaveLocalPlugin(process.cwd() + "/dist")
+                    await management.SaveLocalPlugin(process.cwd() + "/dist") // TODO: get dir which contains package.json
                 } catch (e) {
                     console.error("Error returned by server");
                     console.error(e);
