@@ -5,6 +5,9 @@
     "build": "tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript"
   },
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "bin": {
     "gauntlet": "./bin/main.js"
   },
