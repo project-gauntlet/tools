@@ -25,12 +25,12 @@
     "rollup": "^4.3.0",
     "toml": "^3.0.0",
     "zod": "^3.22.4",
-    "simple-git": "^3.22.0"
+    "simple-git": "^3.22.0",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/node": "^18.17.1",
-    "tslib": "^2.6.2",
     "typescript": "^5.2.2"
   },
   "publishConfig": {
