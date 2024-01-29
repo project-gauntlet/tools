@@ -1,4 +1,4 @@
-import { parseManifest, readManifest, rollupInputOptions, rollupOutputOptions } from "./config";
+import { parseManifest, readManifest, rollupInputOptions, rollupOutputOptions, writeDistManifest } from "./config";
 import { RollupError, watch } from "rollup";
 import chalk from "chalk";
 import { sessionBus } from "dbus-ts";
@@ -52,6 +52,8 @@ export async function dev() {
             case "BUNDLE_END": {
                 const manifestText = readManifest();
                 parseManifest(manifestText); // TODO properly handle errors here
+
+                writeDistManifest(manifestText)
 
                 await event.result.close()
 
