@@ -5,7 +5,7 @@ import os from 'node:os';
 import { build } from "./build";
 
 export async function publish() {
-    await build()
+    await build(false)
 
     const projectDir = process.cwd();
     const projectGit = simpleGit(projectDir);
@@ -22,6 +22,7 @@ export async function publish() {
 
     try {
         // clone git repo into /tmp
+        console.log("Cloning repository to temporary directory...")
         await simpleGit().clone(originUrl, tmpDir);
         const cloneGit = simpleGit(tmpDir);
 
@@ -39,11 +40,14 @@ export async function publish() {
         // create if detached branch doesn't exist
         // switch to release branch
         if (createBranch) {
+            console.log("Creating and switching to 'release' branch...")
             await cloneGit.raw('checkout', '--orphan', 'release')
         } else {
+            console.log("Switching to 'release' branch...")
             await cloneGit.raw('checkout', 'release')
         }
 
+        console.log("Copying data to 'release' branch...")
         // remove everything from tmp repo
         await cloneGit.raw('rm', '-rf', '.');
 
@@ -55,17 +59,20 @@ export async function publish() {
         await cloneGit.raw('add', '-A')
 
         // commit
+        console.log("Committing 'release' branch...")
         const commitHashRaw = await projectGit.raw('rev-parse', 'HEAD')
         const commitHash = commitHashRaw.trim()
         await cloneGit.commit(`chore: deploy ${commitHash}`)
 
         // add current version tag (overwrite if exists)
+        console.log("Tagging current version...")
         await cloneGit.raw('tag', '--force', 'current-version', commitHash)
 
+        console.log("Pushing to 'origin' remote...")
         // push
-        await cloneGit.push()
+        await cloneGit.push(['--set-upstream', "origin", 'release'])
         // push tags
-        await cloneGit.pushTags()
+        await cloneGit.pushTags("origin")
     } finally {
         await rm(tmpDir, { recursive: true, force: true })
     }

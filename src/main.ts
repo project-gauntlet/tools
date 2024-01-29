@@ -24,7 +24,7 @@ program.command('dev')
 program.command('build')
     .description('Build a plugin')
     .action(async () => {
-        await build()
+        await build(true)
     });
 
 program.command('publish')

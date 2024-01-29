@@ -2,7 +2,8 @@ import { rollup, RollupBuild } from "rollup";
 import { parseManifest, readManifest, rollupInputOptions, rollupOutputOptions, writeDistManifest } from "./config";
 
 
-export async function build() {
+export async function build(exit: boolean) {
+    console.log("Building...")
     const manifestText = readManifest();
 
     const manifest = parseManifest(manifestText);
@@ -24,6 +25,8 @@ export async function build() {
         await rollupBuild.close();
     }
 
-    process.exit(buildFailed ? 1 : 0);
+    if (exit) {
+        process.exit(buildFailed ? 1 : 0);
+    }
 }
 
