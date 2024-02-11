@@ -68,7 +68,7 @@ export function rollupInputOptions(manifest: Manifest): InputOptions {
 
     return {
         input: inputs,
-        external: ["react", "react/jsx-runtime", "@project-gauntlet/api/components"],
+        external: ["react", "react/jsx-runtime", /^@project-gauntlet\/api/],
         plugins: [
             nodeResolve(),
             commonjs(),
