@@ -14,8 +14,11 @@ const Manifest = z.strictObject({
         id: z.string(),
         name: z.string(),
         path: z.string(),
-        type: z.enum(["command", "view"])
-    })),
+        type: z.enum(["command", "view", "inline-view"])
+    })).refine(
+        entrypoints => entrypoints.filter(value => value.type === "inline-view").length <= 1,
+        { message: "Only single 'inline-view' entrypoint is allowed" }
+    ),
     permissions: z.strictObject({
         environment: z.array(z.string()).default([]),
         high_resolution_time: z.boolean().default(false),
