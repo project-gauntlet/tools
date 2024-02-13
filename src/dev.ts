@@ -5,7 +5,7 @@ import { sessionBus } from "dbus-ts";
 
 
 export type Interfaces = {
-    "dev.projectgauntlet.Server.Management": dev.projectgauntlet.Server.Management
+    "dev.projectgauntlet.Server": dev.projectgauntlet.Server.Management
 }
 export namespace dev {
     export namespace projectgauntlet {
@@ -37,7 +37,7 @@ export async function dev() {
     const management = await messageBus.getInterface(
         "dev.projectgauntlet.Gauntlet",
         "/dev/projectgauntlet/Server",
-        "dev.projectgauntlet.Server.Management"
+        "dev.projectgauntlet.Server"
     );
 
     watcher.on('event', async (event) => {
