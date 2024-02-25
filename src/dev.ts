@@ -1,23 +1,11 @@
 import { parseManifest, readManifest, rollupInputOptions, rollupOutputOptions, writeDistManifest } from "./config";
 import { RollupError, watch } from "rollup";
 import chalk from "chalk";
-import { sessionBus } from "dbus-ts";
-
-
-export type Interfaces = {
-    "dev.projectgauntlet.Server": dev.projectgauntlet.Server.Management
-}
-export namespace dev {
-    export namespace projectgauntlet {
-        export namespace Server {
-            export interface Management {
-                SaveLocalPlugin(plugin_id: string): Promise<void>
-            }
-        }
-    }
-}
+import { setupGrpc } from "./grpc";
 
 export async function dev() {
+    const { SaveLocalPlugin } = await setupGrpc();
+
     console.log(chalk.cyanBright(`\nwatching for file changes...`));
 
     const watcher = watch({
@@ -31,14 +19,6 @@ export async function dev() {
         ...rollupInputOptions(parseManifest(readManifest())),
         output: rollupOutputOptions()
     });
-
-    const messageBus = await sessionBus<Interfaces>();
-
-    const management = await messageBus.getInterface(
-        "dev.projectgauntlet.Gauntlet",
-        "/dev/projectgauntlet/Server",
-        "dev.projectgauntlet.Server"
-    );
 
     watcher.on('event', async (event) => {
         switch (event.code) {
@@ -58,7 +38,7 @@ export async function dev() {
                 await event.result.close()
 
                 try {
-                    await management.SaveLocalPlugin(process.cwd() + "/dist") // TODO: get dir which contains package.json
+                    await SaveLocalPlugin(process.cwd() + "/dist") // TODO: get dir which contains package.json
                 } catch (e) {
                     console.error("Error returned by server");
                     console.error(e);

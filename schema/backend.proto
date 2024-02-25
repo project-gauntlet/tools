@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+service RpcBackend {
+  rpc SaveLocalPlugin (RpcSaveLocalPluginRequest) returns (RpcSaveLocalPluginResponse);
+}
+
+message RpcSaveLocalPluginRequest {
+  string path = 1;
+}
+message RpcSaveLocalPluginResponse {
+}
