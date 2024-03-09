@@ -6,15 +6,71 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import { readFileSync, writeFileSync } from "node:fs";
 
+const preferences = z.discriminatedUnion("type", [
+    z.strictObject({
+        type: z.literal("number"),
+        name: z.string(),
+        default: z.optional(z.number()),
+        description: z.string(),
+    }),
+    z.strictObject({
+        type: z.literal("string"),
+        name: z.string(),
+        default: z.optional(z.string()),
+        description: z.string(),
+    }),
+    z.strictObject({
+        type: z.literal("enum"),
+        name: z.string(),
+        default: z.optional(z.string()),
+        description: z.string(),
+        enum_values: z.array(z.strictObject({
+            label: z.string(),
+            value: z.string()
+        })),
+    }),
+    z.strictObject({
+        type: z.literal("bool"),
+        name: z.string(),
+        default: z.optional(z.boolean()),
+        description: z.string(),
+    }),
+    z.strictObject({
+        type: z.literal("list_of_strings"),
+        name: z.string(),
+        default: z.optional(z.array(z.string())),
+        description: z.string(),
+    }),
+    z.strictObject({
+        type: z.literal("list_of_numbers"),
+        name: z.string(),
+        default: z.optional(z.array(z.number())),
+        description: z.string(),
+    }),
+    z.strictObject({
+        type: z.literal("list_of_enums"),
+        name: z.string(),
+        default: z.optional(z.array(z.string())),
+        description: z.string(),
+        enum_values: z.array(z.strictObject({
+            label: z.string(),
+            value: z.string()
+        })),
+    })
+]);
+
 const Manifest = z.strictObject({
     gauntlet: z.strictObject({
-        name: z.string()
+        name: z.string(),
+        description: z.string()
     }),
+    preferences: z.optional(z.array(preferences)),
     entrypoint: z.array(z.strictObject({
         id: z.string(),
         name: z.string(),
         path: z.string(),
-        type: z.enum(["command", "view", "inline-view"])
+        type: z.enum(["command", "view", "inline-view"]),
+        preferences: z.optional(z.array(preferences)),
     })).refine(
         entrypoints => entrypoints.filter(value => value.type === "inline-view").length <= 1,
         { message: "Only single 'inline-view' entrypoint is allowed" }
