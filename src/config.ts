@@ -38,19 +38,19 @@ const preferences = z.discriminatedUnion("type", [
     z.strictObject({
         type: z.literal("list_of_strings"),
         name: z.string(),
-        default: z.optional(z.array(z.string())),
+        // default: z.optional(z.array(z.string())),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_numbers"),
         name: z.string(),
-        default: z.optional(z.array(z.number())),
+        // default: z.optional(z.array(z.number())),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_enums"),
         name: z.string(),
-        default: z.optional(z.array(z.string())),
+        // default: z.optional(z.array(z.string())),
         description: z.string(),
         enum_values: z.array(z.strictObject({
             label: z.string(),
