@@ -1,5 +1,12 @@
 import { rollup, RollupBuild } from "rollup";
-import { parseManifest, readManifest, rollupInputOptions, rollupOutputOptions, writeDistManifest } from "./config";
+import {
+    copyAssetData,
+    parseManifest,
+    readManifest,
+    rollupInputOptions,
+    rollupOutputOptions,
+    writeDistManifest
+} from "./config";
 
 
 export async function build(exit: boolean) {
@@ -14,6 +21,8 @@ export async function build(exit: boolean) {
         rollupBuild = await rollup(rollupInputOptions(manifest));
 
         await rollupBuild.write(rollupOutputOptions());
+
+        copyAssetData()
 
         writeDistManifest(manifestText)
     } catch (error) {

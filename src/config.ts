@@ -4,7 +4,7 @@ import { InputOptions, OutputOptions } from "rollup";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
-import { readFileSync, writeFileSync } from "node:fs";
+import { cpSync, readFileSync, writeFileSync } from "node:fs";
 
 const preferences = z.discriminatedUnion("type", [
     z.strictObject({
@@ -99,6 +99,18 @@ export function readManifest(): string {
 
 export function writeDistManifest(manifestText: string) {
     writeFileSync("dist/gauntlet.toml", manifestText)
+}
+
+export function copyAssetData() {
+    try {
+        cpSync("assets", "dist/assets", { recursive: true });
+    } catch (err) {
+        if ((err as any).code === 'ENOENT') {
+            return;
+        } else {
+            throw err
+        }
+    }
 }
 
 export function parseManifest(manifestText: string) {

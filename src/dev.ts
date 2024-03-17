@@ -1,4 +1,11 @@
-import { parseManifest, readManifest, rollupInputOptions, rollupOutputOptions, writeDistManifest } from "./config";
+import {
+    copyAssetData,
+    parseManifest,
+    readManifest,
+    rollupInputOptions,
+    rollupOutputOptions,
+    writeDistManifest
+} from "./config";
 import { RollupError, watch } from "rollup";
 import chalk from "chalk";
 import { setupGrpc } from "./grpc";
@@ -32,6 +39,8 @@ export async function dev() {
             case "BUNDLE_END": {
                 const manifestText = readManifest();
                 parseManifest(manifestText); // TODO properly handle errors here
+
+                copyAssetData()
 
                 writeDistManifest(manifestText)
 
