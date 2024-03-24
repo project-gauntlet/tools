@@ -70,7 +70,7 @@ const Manifest = z.strictObject({
         name: z.string(),
         description: z.string(),
         path: z.string(),
-        type: z.enum(["command", "view", "inline-view"]),
+        type: z.enum(["command", "view", "inline-view", "command-generator"]),
         preferences: z.optional(z.array(preferences)),
     })).refine(
         entrypoints => entrypoints.filter(value => value.type === "inline-view").length <= 1,
