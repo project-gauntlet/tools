@@ -66,14 +66,14 @@ const Manifest = z.strictObject({
     }),
     preferences: z.optional(z.array(preferences)),
     entrypoint: z.array(z.strictObject({
-        id: z.string(),
+        id: z.string().regex(/[a-z0-9]+/),
         name: z.string(),
         description: z.string(),
         path: z.string(),
         type: z.enum(["command", "view", "inline-view", "command-generator"]),
         preferences: z.optional(z.array(preferences)),
         actions: z.optional(z.array(z.strictObject({
-            id: z.string(),
+            id: z.string().regex(/[a-z0-9]+/),
             description: z.string(),
             shortcut: z.strictObject({
                 key: z.enum([ // only stuff that is present on 60% keyboard
@@ -180,16 +180,16 @@ const Manifest = z.strictObject({
         }))).superRefine((value: { id: string, shortcut: { key: string, kind: string } }[] | undefined, ctx) => {
             if (value) {
                 const uniqueElements = new Set();
-                const duplicates: { id: string, shortcut: { key: string, kind: string } }[] = [];
+                const duplicates: { id: string }[] = [];
 
-                value.forEach(item => {
+                for (const item of value) {
                     let key = `${item.shortcut.key}-${item.shortcut.kind}`;
                     if (uniqueElements.has(key)) {
                         duplicates.push(item);
                     } else {
                         uniqueElements.add(key);
                     }
-                });
+                }
 
                 for (const duplicate of duplicates) {
                     ctx.addIssue({
