@@ -6,7 +6,7 @@ import {
     rollupOutputOptions,
     writeDistManifest
 } from "./config";
-import { RollupError, watch } from "rollup";
+import { Plugin, RollupError, watch } from "rollup";
 import chalk from "chalk";
 import { setupGrpc } from "./grpc";
 
@@ -14,6 +14,13 @@ export async function dev() {
     const { SaveLocalPlugin } = await setupGrpc();
 
     console.log(chalk.cyanBright(`\nwatching for file changes...`));
+
+    const manifestWatcherPlugin = (): Plugin => ({
+        name: "manifest-watcher",
+        buildStart() {
+            this.addWatchFile("./gauntlet.toml");
+        },
+    });
 
     const watcher = watch({
         watch: {
@@ -23,7 +30,7 @@ export async function dev() {
                 '**/dist/**',
             ],
         },
-        ...rollupInputOptions(parseManifest(readManifest())),
+        ...rollupInputOptions(parseManifest(readManifest()), [manifestWatcherPlugin()]),
         output: rollupOutputOptions()
     });
 

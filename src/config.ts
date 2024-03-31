@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { parse as parseToml } from "toml";
-import { InputOptions, OutputOptions } from "rollup";
+import { InputOptions, OutputOptions, Plugin } from "rollup";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
@@ -240,7 +240,7 @@ export function parseManifest(manifestText: string) {
 }
 
 
-export function rollupInputOptions(manifest: Manifest): InputOptions {
+export function rollupInputOptions(manifest: Manifest, additionalPlugins: Plugin[] = []): InputOptions {
     const mapInputs = manifest.entrypoint.map(entrypoint => [entrypoint.id, entrypoint.path] as const);
     const entries = new Map(mapInputs);
     const inputs = Object.fromEntries(entries);
@@ -249,6 +249,7 @@ export function rollupInputOptions(manifest: Manifest): InputOptions {
         input: inputs,
         external: ["react", "react/jsx-runtime", /^@project-gauntlet\/api/],
         plugins: [
+            ...additionalPlugins,
             nodeResolve(),
             commonjs(),
             typescript({
