@@ -6,22 +6,26 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import { cpSync, readFileSync, writeFileSync } from "node:fs";
 
+// needs to be valid and properly cased js identifier
+const preferenceName = z.string()
+    .regex(/^[a-zA-Z0-9]+$/, "Preference name can only contain letters and numbers");
+
 const preferences = z.discriminatedUnion("type", [
     z.strictObject({
         type: z.literal("number"),
-        name: z.string(),
+        name: preferenceName,
         default: z.optional(z.number()),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("string"),
-        name: z.string(),
+        name: preferenceName,
         default: z.optional(z.string()),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("enum"),
-        name: z.string(),
+        name: preferenceName,
         default: z.optional(z.string()),
         description: z.string(),
         enum_values: z.array(z.strictObject({
@@ -31,25 +35,25 @@ const preferences = z.discriminatedUnion("type", [
     }),
     z.strictObject({
         type: z.literal("bool"),
-        name: z.string(),
+        name: preferenceName,
         default: z.optional(z.boolean()),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_strings"),
-        name: z.string(),
+        name: preferenceName,
         // default: z.optional(z.array(z.string())),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_numbers"),
-        name: z.string(),
+        name: preferenceName,
         // default: z.optional(z.array(z.number())),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_enums"),
-        name: z.string(),
+        name: preferenceName,
         // default: z.optional(z.array(z.string())),
         description: z.string(),
         enum_values: z.array(z.strictObject({
@@ -66,14 +70,14 @@ const Manifest = z.strictObject({
     }),
     preferences: z.optional(z.array(preferences)),
     entrypoint: z.array(z.strictObject({
-        id: z.string().regex(/[a-z0-9]+/),
+        id: z.string().regex(/^[a-z0-9-]+$/, "Entrypoint id can only contain small letters, numbers and dash"), // needs to be valid js file
         name: z.string(),
         description: z.string(),
         path: z.string(),
         type: z.enum(["command", "view", "inline-view", "command-generator"]),
         preferences: z.optional(z.array(preferences)),
         actions: z.optional(z.array(z.strictObject({
-            id: z.string().regex(/[a-z0-9]+/),
+            id: z.string().regex(/^[a-zA-Z0-9]+$/, "Action id can only contain letters and numbers"), // needs to be valid and properly cased js identifier
             description: z.string(),
             shortcut: z.strictObject({
                 key: z.enum([ // only stuff that is present on 60% keyboard
