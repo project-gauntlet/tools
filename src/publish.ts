@@ -28,7 +28,7 @@ export async function publish() {
 
         let createBranch = false;
         try {
-            await cloneGit.raw('show-ref', '--exists', 'refs/remotes/origin/release');
+            await cloneGit.raw('show-ref', '--exists', 'refs/remotes/origin/gauntlet/release');
         } catch (e) {
             if (e instanceof GitError && e.message === 'error: reference does not exist\n') {
                 createBranch = true
@@ -38,16 +38,16 @@ export async function publish() {
         }
 
         // create if detached branch doesn't exist
-        // switch to release branch
+        // switch to 'gauntlet/release' branch
         if (createBranch) {
-            console.log("Creating and switching to 'release' branch...")
-            await cloneGit.raw('checkout', '--orphan', 'release')
+            console.log("Creating and switching to 'gauntlet/release' branch...")
+            await cloneGit.raw('checkout', '--orphan', 'gauntlet/release')
         } else {
-            console.log("Switching to 'release' branch...")
-            await cloneGit.raw('checkout', 'release')
+            console.log("Switching to 'gauntlet/release' branch...")
+            await cloneGit.raw('checkout', 'gauntlet/release')
         }
 
-        console.log("Copying data to 'release' branch...")
+        console.log("Copying data to 'gauntlet/release' branch...")
         // remove everything from tmp repo
         await cloneGit.raw('rm', '-rf', '.');
 
@@ -59,7 +59,7 @@ export async function publish() {
         await cloneGit.raw('add', '-A')
 
         // commit
-        console.log("Committing 'release' branch...")
+        console.log("Committing 'gauntlet/release' branch...")
         const commitHashRaw = await projectGit.raw('rev-parse', 'HEAD')
         const commitHash = commitHashRaw.trim()
         await cloneGit.commit(`chore: deploy ${commitHash}`)
@@ -70,7 +70,7 @@ export async function publish() {
 
         console.log("Pushing to 'origin' remote...")
         // push
-        await cloneGit.push(['--set-upstream', "origin", 'release'])
+        await cloneGit.push(['--set-upstream', "origin", 'gauntlet/release'])
         // push tags
         await cloneGit.pushTags("origin")
     } finally {
