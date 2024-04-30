@@ -54,7 +54,13 @@ export async function publish() {
         // copy everything from dist
         let distDir = path.resolve(projectDir, 'dist');
         await cp(path.resolve(distDir, 'js'), path.resolve(tmpDir, 'js'), { recursive: true })
-        await cp(path.resolve(distDir, 'assets'), path.resolve(tmpDir, 'assets'), { recursive: true })
+        try {
+            await cp(path.resolve(distDir, 'assets'), path.resolve(tmpDir, 'assets'), { recursive: true })
+        } catch (err) {
+            if ((err as any).code !== 'ENOENT') { // throw only if error other than file doesn't exist
+                throw err
+            }
+        }
         await cp(path.resolve(distDir, 'gauntlet.toml'), path.resolve(tmpDir, 'gauntlet.toml'))
 
         await cloneGit.raw('add', '-A')
