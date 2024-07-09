@@ -217,9 +217,13 @@ const Manifest = z.strictObject({
         run_subprocess: z.array(z.string()).default([]),
         system: z.array(z.string()).default([]),
     }).default({}),
-    supported_system: z.array(z.discriminatedUnion("os", [
-        z.strictObject({ os: z.literal("linux") })
-    ])).default([]),
+    supported_system: z.array(
+        z.discriminatedUnion("os", [
+            z.strictObject({ os: z.literal("linux") }),
+            z.strictObject({ os: z.literal("windows") }),
+            z.strictObject({ os: z.literal("macos") })
+        ])
+    ).default([]),
 });
 
 type Manifest = z.infer<typeof Manifest>;
