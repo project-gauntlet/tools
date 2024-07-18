@@ -16,9 +16,9 @@ export async function setupGrpc() {
     return {
         async SaveLocalPlugin(path) {
             return new Promise((resolve, reject) => {
-                client.SaveLocalPlugin({ path }, (err, _) => {
+                client.SaveLocalPlugin({ path }, (err, response) => {
                     if (err) reject(err);
-                    else (resolve({}));
+                    else (resolve(response));
                 });
             });
         }

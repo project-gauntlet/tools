@@ -26,6 +26,7 @@
     "commander": "^11.1.0",
     "rollup": "^4.3.0",
     "simple-git": "^3.22.0",
+    "tail": "^2.2.6",
     "toml": "^3.0.0",
     "tslib": "^2.6.2",
     "zod": "^3.22.4"
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/node": "^18.17.1",
+    "@types/tail": "^2.2.3",
     "typescript": "^5.2.2"
   },
   "publishConfig": {

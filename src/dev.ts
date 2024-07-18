@@ -9,6 +9,7 @@ import {
 import { Plugin, RollupError, watch } from "rollup";
 import chalk from "chalk";
 import { setupGrpc } from "./grpc";
+import { Tail } from "tail";
 
 export async function dev() {
     const { SaveLocalPlugin } = await setupGrpc();
@@ -34,6 +35,9 @@ export async function dev() {
         output: rollupOutputOptions()
     });
 
+    let stdoutTail: Tail | undefined = undefined;
+    let stderrTail: Tail | undefined = undefined;
+
     watcher.on('event', async (event) => {
         switch (event.code) {
             case "START": {
@@ -54,7 +58,29 @@ export async function dev() {
                 await event.result.close()
 
                 try {
-                    await SaveLocalPlugin(process.cwd() + "/dist") // TODO: get dir which contains package.json
+                    let { stdoutFilePath, stderrFilePath } = await SaveLocalPlugin(process.cwd()); // TODO: get dir which contains package.json
+
+                    if (stdoutTail != undefined) {
+                        stdoutTail.unwatch()
+                    }
+                    stdoutTail = new Tail(stdoutFilePath)
+                    stdoutTail.on("line", function(data) {
+                        console.error(data);
+                    });
+                    stdoutTail.on("error", function(error) {
+                        console.error("ERROR: ", error);
+                    });
+
+                    if (stderrTail != undefined) {
+                        stderrTail.unwatch()
+                    }
+                    stderrTail = new Tail(stderrFilePath)
+                    stderrTail.on("line", function(data) {
+                        console.error(data);
+                    });
+                    stderrTail.on("error", function(error) {
+                        console.error("ERROR: ", error);
+                    });
                 } catch (e) {
                     console.error("Error returned by server");
                     console.error(e);
