@@ -58,7 +58,7 @@ export async function dev() {
                 await event.result.close()
 
                 try {
-                    let { stdoutFilePath, stderrFilePath } = await SaveLocalPlugin(process.cwd()); // TODO: get dir which contains package.json
+                    let { stdoutFilePath, stderrFilePath } = await SaveLocalPlugin(process.cwd() + "/dist") // TODO: get dir which contains package.json
 
                     if (stdoutTail != undefined) {
                         stdoutTail.unwatch()
