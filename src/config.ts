@@ -3,8 +3,9 @@ import { parse as parseToml } from "toml";
 import { InputOptions, OutputOptions, Plugin } from "rollup";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
+import typescript from "rollup-plugin-typescript2";
 import { cpSync, readFileSync, writeFileSync } from "node:fs";
+import { fromError } from 'zod-validation-error';
 
 // needs to be valid and properly cased js identifier
 const preferenceName = z.string()
@@ -226,7 +227,7 @@ const Manifest = z.strictObject({
     ).default([]),
 });
 
-type Manifest = z.infer<typeof Manifest>;
+export type Manifest = z.infer<typeof Manifest>;
 
 export function readManifest(): string {
     return readFileSync("./gauntlet.toml", "utf8")
@@ -248,7 +249,7 @@ export function copyAssetData() {
     }
 }
 
-export function parseManifest(manifestText: string) {
+export function parseManifest(manifestText: string): Manifest {
     const manifest = Manifest.parse(parseToml(manifestText));
 
     const permEnvExist = manifest.permissions.environment.length !== 0;

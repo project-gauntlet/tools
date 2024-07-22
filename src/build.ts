@@ -1,19 +1,29 @@
-import { rollup, RollupBuild } from "rollup";
+import { rollup, RollupBuild, RollupError } from "rollup";
 import {
-    copyAssetData,
+    copyAssetData, Manifest,
     parseManifest,
     readManifest,
     rollupInputOptions,
     rollupOutputOptions,
     writeDistManifest
 } from "./config";
+import { currentTime, outputBuildError, zodParseError } from "./dev";
+import chalk from "chalk";
 
 
 export async function build(exit: boolean) {
-    console.log("Building...")
+    console.log(currentTime() + ' ' + chalk.yellowBright("Building..."));
+
     const manifestText = readManifest();
 
-    const manifest = parseManifest(manifestText);
+    let manifest: Manifest
+
+    try {
+        manifest = parseManifest(manifestText);
+    } catch (err) {
+        zodParseError(err)
+        process.exit(1)
+    }
 
     let rollupBuild: RollupBuild | undefined;
     let buildFailed = false;
@@ -21,17 +31,26 @@ export async function build(exit: boolean) {
         rollupBuild = await rollup(rollupInputOptions(manifest));
 
         await rollupBuild.write(rollupOutputOptions());
+    } catch (error) {
+        buildFailed = true;
+        outputBuildError(error as RollupError, "Error building");
+    }
 
+    if (rollupBuild) {
+        await rollupBuild.close();
+    }
+
+    try {
         copyAssetData()
 
         writeDistManifest(manifestText)
     } catch (error) {
         buildFailed = true;
-        console.error(error);
+        console.error(chalk.red(error));
     }
-    
-    if (rollupBuild) {
-        await rollupBuild.close();
+
+    if (!buildFailed) {
+        console.log(currentTime() + ' ' + chalk.green("Build successful"));
     }
 
     if (exit) {
