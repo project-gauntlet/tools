@@ -16,7 +16,7 @@ import { fromError } from "zod-validation-error";
 export async function dev() {
     const { SaveLocalPlugin } = await setupGrpc();
 
-    let pluginId = process.cwd() + "/dist";// TODO: get dir which contains package.json
+    let pluginId = process.cwd();// TODO: get dir which contains package.json
 
     console.log(chalk.bgYellowBright.black(`Gauntlet Dev Server `) + chalk.bgYellowBright.whiteBright(`v${version}`));
     console.log(chalk.whiteBright(`Plugin ID: file://${pluginId}`));
