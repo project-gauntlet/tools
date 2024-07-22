@@ -1,6 +1,7 @@
 import typescript from "rollup-plugin-typescript2";
 import json from '@rollup/plugin-json';
 import { defineConfig } from "rollup";
+import { cleandir } from "rollup-plugin-cleandir";
 
 export default defineConfig({
     input: [
@@ -14,6 +15,7 @@ export default defineConfig({
         }
     ],
     plugins: [
+        cleandir(),
         typescript({
             tsconfig: './tsconfig.json',
         }),

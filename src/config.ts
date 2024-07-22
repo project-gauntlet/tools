@@ -5,7 +5,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
 import { cpSync, readFileSync, writeFileSync } from "node:fs";
-import { fromError } from 'zod-validation-error';
+import { cleandir } from "rollup-plugin-cleandir";
 
 // needs to be valid and properly cased js identifier
 const preferenceName = z.string()
@@ -279,6 +279,7 @@ export function rollupInputOptions(manifest: Manifest, additionalPlugins: Plugin
         external: ["react", "react/jsx-runtime", /^@project-gauntlet\/api/],
         plugins: [
             ...additionalPlugins,
+            cleandir(),
             nodeResolve(),
             commonjs(),
             typescript({
