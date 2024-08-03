@@ -2,7 +2,7 @@
   "name": "@project-gauntlet/tools",
   "version": "0.5.0",
   "scripts": {
-    "build": "rm node_modules/@grpc/grpc-js/build/src/index.d.ts || true && tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript2"
+    "build": "node ./grpc-js-fix.js && tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript2"
   },
   "type": "module",
   "repository": {
@@ -37,7 +37,8 @@
   },
   "devDependencies": {
     "@types/node": "^18.17.1",
-    "@types/tail": "^2.2.3"
+    "@types/tail": "^2.2.3",
+    "workspace-root": "^3.2.0"
   },
   "publishConfig": {
     "access": "public"
