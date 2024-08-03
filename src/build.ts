@@ -7,14 +7,25 @@ import {
     rollupOutputOptions,
     writeDistManifest
 } from "./config";
-import { currentTime, outputBuildError, zodParseError } from "./dev";
+import { currentTime, manifestNotFoundErrorWithTime, rollupBuildError, zodParseError } from "./dev";
 import chalk from "chalk";
 
 
 export async function build(exit: boolean) {
     console.log(currentTime() + ' ' + chalk.yellowBright("Building..."));
 
-    const manifestText = readManifest();
+    let manifestText: string;
+
+    try {
+        manifestText = readManifest()
+    } catch (err) {
+        if ((err as any).code == 'ENOENT') {
+            manifestNotFoundErrorWithTime()
+            process.exit(1)
+        } else {
+            throw err
+        }
+    }
 
     let manifest: Manifest
 
@@ -33,7 +44,7 @@ export async function build(exit: boolean) {
         await rollupBuild.write(rollupOutputOptions());
     } catch (error) {
         buildFailed = true;
-        outputBuildError(error as RollupError, "Error building");
+        rollupBuildError(error as RollupError, "Error building");
     }
 
     if (rollupBuild) {

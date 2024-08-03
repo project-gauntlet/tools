@@ -28,7 +28,18 @@ export async function dev() {
         },
     });
 
-    let manifestText = readManifest();
+    let manifestText: string;
+
+    try {
+        manifestText = readManifest()
+    } catch (err) {
+        if ((err as any).code == 'ENOENT') {
+            manifestNotFoundErrorWithTime()
+            process.exit(1)
+        } else {
+            throw err
+        }
+    }
 
     let manifest: Manifest
 
@@ -64,7 +75,20 @@ export async function dev() {
                 break;
             }
             case "BUNDLE_END": {
-                const manifestText = readManifest();
+                await event.result.close()
+
+                let manifestText;
+
+                try {
+                    manifestText = readManifest()
+                } catch (err: unknown) {
+                    if ((err as any).code == 'ENOENT') {
+                        manifestNotFoundErrorWithTime()
+                        break;
+                    } else {
+                        throw err
+                    }
+                }
 
                 try {
                     parseManifest(manifestText);
@@ -77,41 +101,44 @@ export async function dev() {
 
                 writeDistManifest(manifestText)
 
-                await event.result.close()
-
+                let serverResponse;
                 try {
-                    let { stdoutFilePath, stderrFilePath } = await SaveLocalPlugin(pluginId)
+                    serverResponse = await SaveLocalPlugin(pluginId)
+                } catch (err: unknown) {
+                    grpcErrorWithTime(err);
 
-                    if (stdoutTail != undefined) {
-                        stdoutTail.unwatch()
-                    }
-                    stdoutTail = new Tail(stdoutFilePath)
-                    stdoutTail.on("line", function(line) {
-                        console.log(currentTimePlugin() + ' ' + chalk.whiteBright(line));
-                    });
-                    stdoutTail.on("error", function(error) {
-                        console.error(currentTime() + ' ' + chalk.red("ERROR READING STDOUT LOGS: " + error));
-                    });
-
-                    if (stderrTail != undefined) {
-                        stderrTail.unwatch()
-                    }
-                    stderrTail = new Tail(stderrFilePath)
-                    stderrTail.on("line", function(line) {
-                        console.error(currentTimePlugin() + ' ' + chalk.redBright(line));
-                    });
-                    stderrTail.on("error", function(error) {
-                        console.error(currentTime() + ' ' + chalk.red("ERROR READING STDERR LOGS: " + error));
-                    });
-                } catch (e) {
                     if (stdoutTail != undefined) {
                         stdoutTail.unwatch()
                     }
                     if (stderrTail != undefined) {
                         stderrTail.unwatch()
                     }
-                    throw e;
+                    break;
                 }
+
+                let { stdoutFilePath, stderrFilePath } = serverResponse;
+
+                if (stdoutTail != undefined) {
+                    stdoutTail.unwatch()
+                }
+                stdoutTail = new Tail(stdoutFilePath)
+                stdoutTail.on("line", function (line) {
+                    console.log(currentTimePlugin() + ' ' + chalk.whiteBright(line));
+                });
+                stdoutTail.on("error", function (error) {
+                    console.error(currentTime() + ' ' + chalk.red("ERROR READING STDOUT LOGS: " + error));
+                });
+
+                if (stderrTail != undefined) {
+                    stderrTail.unwatch()
+                }
+                stderrTail = new Tail(stderrFilePath)
+                stderrTail.on("line", function (line) {
+                    console.error(currentTimePlugin() + ' ' + chalk.redBright(line));
+                });
+                stderrTail.on("error", function (error) {
+                    console.error(currentTime() + ' ' + chalk.red("ERROR READING STDERR LOGS: " + error));
+                });
 
                 console.log(currentTime() + ' ' + chalk.green(`Reloaded in ${event.duration}ms`));
                 break;
@@ -120,7 +147,8 @@ export async function dev() {
                 break;
             }
             case "ERROR": {
-                outputBuildError(event.error, "Error reloading")
+                // unknown error also go here, so we do our best to catch them before in "BUNDLE_END" section
+                rollupBuildError(event.error, "Error reloading")
                 break;
             }
         }
@@ -147,7 +175,17 @@ export function zodParseErrorWithTime(err: unknown) {
     console.log(currentTime() + ' ' + chalk.red("Manifest " + validationError.toString()));
 }
 
-export function outputBuildError(error: RollupError, errMessage: string) {
+export function manifestNotFoundErrorWithTime() {
+    console.log(currentTime() + ' ' + chalk.red("Plugin manifest (gauntlet.toml) not found"));
+}
+
+export function grpcErrorWithTime(err: unknown) {
+    let error = err as any; // should be ServiceError but grpc types are broken
+    console.log(currentTime() + ' ' + chalk.red("Error reloading"));
+    console.log(currentTime() + ' ' + chalk.red(error.details));
+}
+
+export function rollupBuildError(error: RollupError, errMessage: string) {
     const { message, id, loc, frame } = error;
 
     console.error(currentTime() + ' ' + chalk.red(errMessage))
