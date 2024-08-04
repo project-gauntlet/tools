@@ -75,9 +75,14 @@ export async function publish() {
         console.log("Tagging current version...")
         await cloneGit.raw('tag', '--force', 'current-version', commitHash)
 
+        console.log("Removing remote tag...")
+        await cloneGit.push(['--set-upstream', '--delete', 'origin', 'current-version'])
+
         console.log("Pushing to 'origin' remote...")
         // push
-        await cloneGit.push(['--set-upstream', "origin", 'gauntlet/release'])
+        await cloneGit.push(['--set-upstream', 'origin', 'gauntlet/release'])
+
+        console.log("Pushing tags to 'origin' remote...")
         // push tags
         await cloneGit.pushTags("origin")
     } finally {
