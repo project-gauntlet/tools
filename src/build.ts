@@ -52,7 +52,7 @@ export async function build(exit: boolean) {
     }
 
     try {
-        copyAssetData()
+        await copyAssetData()
 
         writeDistManifest(manifestText)
     } catch (error) {

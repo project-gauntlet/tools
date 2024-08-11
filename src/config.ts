@@ -4,8 +4,9 @@ import { InputOptions, OutputOptions, Plugin } from "rollup";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
-import { cpSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { cleandir } from "rollup-plugin-cleandir";
+import { cp } from "node:fs/promises";
 
 // needs to be valid and properly cased js identifier
 const preferenceName = z.string()
@@ -237,9 +238,9 @@ export function writeDistManifest(manifestText: string) {
     writeFileSync("dist/gauntlet.toml", manifestText)
 }
 
-export function copyAssetData() {
+export async function copyAssetData() {
     try {
-        cpSync("assets", "dist/assets", { recursive: true });
+        await cp("assets", "dist/assets", { recursive: true });
     } catch (err) {
         if ((err as any).code === 'ENOENT') {
             return;

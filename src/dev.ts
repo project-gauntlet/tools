@@ -97,7 +97,7 @@ export async function dev() {
                     break;
                 }
 
-                copyAssetData()
+                await copyAssetData()
 
                 writeDistManifest(manifestText)
 
