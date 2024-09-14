@@ -218,6 +218,7 @@ const Manifest = z.strictObject({
         fs_write_access: z.array(z.string()).default([]),
         run_subprocess: z.array(z.string()).default([]),
         system: z.array(z.string()).default([]),
+        clipboard: z.array(z.enum(["read", "write", "clear"])).default([]),
     }).default({}),
     supported_system: z.array(
         z.discriminatedUnion("os", [
