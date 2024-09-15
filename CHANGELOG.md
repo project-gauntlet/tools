@@ -6,6 +6,12 @@ For changes in main application see [separate CHANGELOG.md](https://github.com/p
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning Convention
 
+## [0.7.0] - 2024-09-15
+- Add `permissions.clipboard` manifest property that accepts list of one or more of `"read"`, `"write"` and `"clear"` values
+- Add `permissions.main_search_bar` manifest property that accepts list with `"read"` value
+- **BREAKING CHANGE**: `preferences.name` manifest property is split into `preferences.name` and `preferences.id`
+- **BREAKING CHANGE**: `entrypoint.preferences.name` manifest property is split into `entrypoint.preferences.name` and `entrypoint.preferences.id`
+
 ## [0.6.0] - 2024-08-04
 
 - Make `dev` server pretty
