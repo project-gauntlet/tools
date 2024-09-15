@@ -9,25 +9,28 @@ import { cleandir } from "rollup-plugin-cleandir";
 import { cp } from "node:fs/promises";
 
 // needs to be valid and properly cased js identifier
-const preferenceName = z.string()
-    .regex(/^[a-zA-Z0-9]+$/, "Preference name can only contain letters and numbers");
+const preferenceId = z.string()
+    .regex(/^[a-zA-Z0-9]+$/, "Preference id can only contain letters and numbers");
 
 const preferences = z.discriminatedUnion("type", [
     z.strictObject({
         type: z.literal("number"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         default: z.optional(z.number()),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("string"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         default: z.optional(z.string()),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("enum"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         default: z.optional(z.string()),
         description: z.string(),
         enum_values: z.array(z.strictObject({
@@ -37,25 +40,29 @@ const preferences = z.discriminatedUnion("type", [
     }),
     z.strictObject({
         type: z.literal("bool"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         default: z.optional(z.boolean()),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_strings"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         // default: z.optional(z.array(z.string())),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_numbers"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         // default: z.optional(z.array(z.number())),
         description: z.string(),
     }),
     z.strictObject({
         type: z.literal("list_of_enums"),
-        name: preferenceName,
+        id: preferenceId,
+        name: z.string(),
         // default: z.optional(z.array(z.string())),
         description: z.string(),
         enum_values: z.array(z.strictObject({
