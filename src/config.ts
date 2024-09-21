@@ -260,28 +260,7 @@ export async function copyAssetData() {
 }
 
 export function parseManifest(manifestText: string): Manifest {
-    const manifest = Manifest.parse(parseToml(manifestText));
-
-    const permEnvExist = manifest.permissions.environment.length !== 0;
-    const permFfiExist = manifest.permissions.ffi.length !== 0;
-    const permFsReadExist = manifest.permissions.fs_read_access.length !== 0;
-    const permFsWriteExist = manifest.permissions.fs_write_access.length !== 0;
-    const permRunExist = manifest.permissions.run_subprocess.length !== 0;
-    const permSystemExist = manifest.permissions.system.length !== 0;
-
-    if (permEnvExist || permFfiExist || permFsReadExist || permFsWriteExist || permRunExist || permSystemExist) {
-        if (manifest.supported_system.length === 0) {
-            throw new Error('Permissions "environment", "ffi", "fs_read_access", "fs_write_access", "run_subprocess", "system" requires "supported_system" to be specified')
-        }
-    }
-
-    let has_inline_view = manifest.entrypoint.some(value => value.type === "inline-view");
-
-    if (has_inline_view && !manifest.permissions.main_search_bar.includes("read")) {
-        throw new Error('Entrypoint type "inline-view" requires main_search_bar "read" permission')
-    }
-
-    return manifest
+    return Manifest.parse(parseToml(manifestText))
 }
 
 
