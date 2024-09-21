@@ -217,14 +217,31 @@ const Manifest = z.strictObject({
         { message: "Only single 'inline-view' entrypoint is allowed" }
     ),
     permissions: z.strictObject({
-        environment: z.array(z.string()).default([]),
-        high_resolution_time: z.boolean().default(false),
-        network: z.array(z.string()).default([]),
-        ffi: z.array(z.string()).default([]),
-        fs_read_access: z.array(z.string()).default([]),
-        fs_write_access: z.array(z.string()).default([]),
-        run_subprocess: z.array(z.string()).default([]),
-        system: z.array(z.string()).default([]),
+        environment: z.array(
+            z.string().min(1)
+        ).default([]),
+        network: z.array(
+            z.string().min(1)
+        ).default([]),
+        filesystem: z.strictObject({
+            read: z.array(
+                z.string().min(1)
+            ).default([]),
+            write: z.array(
+                z.string().min(1)
+            ).default([]),
+        }).default({}),
+        exec: z.strictObject({
+            command: z.array(
+                z.string().min(1)
+            ).default([]),
+            executable: z.array(
+                z.string().min(1)
+            ).default([]),
+        }).default({}),
+        system: z.array(
+            z.string().min(1)
+        ).default([]),
         clipboard: z.array(z.enum(["read", "write", "clear"])).default([]),
         main_search_bar: z.array(z.enum(["read"])).default([]),
     }).default({}),
