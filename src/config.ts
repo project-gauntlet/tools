@@ -83,6 +83,7 @@ const Manifest = z.strictObject({
         name: z.string(),
         description: z.string(),
         path: z.string(),
+        icon: z.optional(z.string()),
         type: z.enum(["command", "view", "inline-view", "command-generator"]),
         preferences: z.optional(z.array(preferences)),
         actions: z.optional(z.array(z.strictObject({
