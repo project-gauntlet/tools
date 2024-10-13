@@ -1,6 +1,6 @@
 {
   "name": "@project-gauntlet/tools",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "scripts": {
     "build": "node ./grpc-js-fix.js && tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript2"
   },
