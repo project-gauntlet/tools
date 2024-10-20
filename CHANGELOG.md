@@ -6,6 +6,9 @@ For changes in main application see [separate CHANGELOG.md](https://github.com/p
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning Convention
 
+## [0.9.0] - 2024-10-20
+- Fixed `publish` failing if no `current-version` tag exists on remote
+
 ## [0.8.0] - 2024-10-13
 - Added `entrypoint.icon` plugin manifest property that accepts path to image inside plugin's `assets` directory
 - **BREAKING CHANGE**: Plugin permissions reworked. See [main application CHANGELOG.md](https://github.com/project-gauntlet/gauntlet/blob/main/CHANGELOG.md) for version v10

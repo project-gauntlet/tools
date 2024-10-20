@@ -75,8 +75,12 @@ export async function publish() {
         console.log("Tagging current version...")
         await cloneGit.raw('tag', '--force', 'current-version', commitHash)
 
-        console.log("Removing remote tag...")
-        await cloneGit.push(['--set-upstream', '--delete', 'origin', 'current-version'])
+        try {
+            console.log("Removing remote tag...")
+            await cloneGit.push(['--set-upstream', '--delete', 'origin', 'current-version'])
+        } catch (ignore) {
+            // this failing means tag doesn't exist on remote
+        }
 
         console.log("Pushing to 'origin' remote...")
         // push
