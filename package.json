@@ -3,7 +3,7 @@
   "version": "0.9.0",
   "scripts": {
     "prepare": "npm run build",
-    "build": "node ./grpc-js-fix.js && tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript2"
+    "build": "tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript2"
   },
   "type": "module",
   "repository": {
