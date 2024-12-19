@@ -17,28 +17,28 @@
     "gauntlet": "./bin/main.js"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.11.1",
+    "@grpc/grpc-js": "^1.12.5",
     "@grpc/proto-loader": "^0.7.13",
-    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "chalk": "^5.3.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "chalk": "^5.4.0",
     "commander": "^12.1.0",
-    "rollup": "^4.27.4",
-    "rollup-plugin-cleandir": "^2.0.0",
+    "rollup": "^4.28.1",
+    "rollup-plugin-cleandir": "^3.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
-    "simple-git": "^3.25.0",
+    "simple-git": "^3.27.0",
     "tail": "^2.2.6",
     "toml": "^3.0.0",
-    "tslib": "^2.6.3",
-    "typescript": "^5.2.2",
-    "zod": "^3.23.8",
-    "zod-validation-error": "^3.3.0"
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2",
+    "zod": "^3.24.1",
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
-    "@types/node": "^18.19.67",
+    "@types/node": "^22.10.2",
     "@types/tail": "^2.2.3",
-    "workspace-root": "^3.2.0"
+    "workspace-root": "^3.3.1"
   },
   "publishConfig": {
     "access": "public"

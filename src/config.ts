@@ -292,7 +292,7 @@ export function rollupInputOptions(manifest: Manifest, additionalPlugins: Plugin
         external: ["react", "react/jsx-runtime", /^@project-gauntlet\/api/],
         plugins: [
             ...additionalPlugins,
-            cleandir(),
+            cleandir('dist'),
             nodeResolve(),
             commonjs(),
             typescript({
