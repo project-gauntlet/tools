@@ -294,7 +294,9 @@ export function rollupInputOptions(manifest: Manifest, additionalPlugins: Plugin
             ...additionalPlugins,
             cleandir('dist'),
             nodeResolve(),
-            commonjs(),
+            commonjs({
+                strictRequires: "auto"
+            }),
             typescript({
                 tsconfig: './tsconfig.json',
             }),
