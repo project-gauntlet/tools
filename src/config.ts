@@ -84,7 +84,7 @@ const Manifest = z.strictObject({
         description: z.string(),
         path: z.string(),
         icon: z.optional(z.string()),
-        type: z.enum(["command", "view", "inline-view", "command-generator"]),
+        type: z.enum(["command", "view", "inline-view", "entrypoint-generator"]),
         preferences: z.optional(z.array(preferences)),
         actions: z.optional(z.array(z.strictObject({
             id: z.string().regex(/^[a-zA-Z0-9]+$/, "Action id can only contain letters and numbers"), // needs to be valid and properly cased js identifier
