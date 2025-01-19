@@ -1,6 +1,6 @@
 {
   "name": "@project-gauntlet/tools",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --noEmit && rollup --config rollup.config.ts --configPlugin typescript2"
