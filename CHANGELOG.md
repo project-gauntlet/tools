@@ -6,6 +6,10 @@ For changes in main application see [separate CHANGELOG.md](https://github.com/p
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning Convention
 
+## [0.10.0] - 2024-01-19
+- Rename `"command-generator"` into `"entrypoint-generator"`
+- A lot of internal dependency updates
+
 ## [0.9.0] - 2024-10-20
 - Fixed `publish` failing if no `current-version` tag exists on remote
 
