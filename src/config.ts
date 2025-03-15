@@ -73,6 +73,7 @@ const preferences = z.discriminatedUnion("type", [
 ]);
 
 const Manifest = z.strictObject({
+    "$schema": z.optional(z.string()),
     gauntlet: z.strictObject({
         name: z.string(),
         description: z.string()
