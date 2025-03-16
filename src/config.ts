@@ -76,7 +76,11 @@ const Manifest = z.strictObject({
     "$schema": z.optional(z.string()),
     gauntlet: z.strictObject({
         name: z.string(),
-        description: z.string()
+        description: z.string(),
+        authors: z.optional(z.array(z.strictObject({
+            name: z.string(),
+            uris: z.optional(z.array(z.string()))
+        }))),
     }),
     preferences: z.optional(z.array(preferences)),
     entrypoint: z.array(z.strictObject({
