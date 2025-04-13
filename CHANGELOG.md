@@ -6,6 +6,14 @@ For changes in main application see [separate CHANGELOG.md](https://github.com/p
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning Convention
 
+## [0.11.0] - 2024-04-13
+- Added authors field to Plugin Manifest
+  - `gauntlet.authors.*.name` - String
+  - `gauntlet.authors.*.uris` - List of strings. URIs that identify the author. Can be a link to social media page or an email (if email it should begin with `mailto:` schema)
+- Added `$schema` field to Plugin Manifest which takes URL to the JSON Schema file
+  - Some editors use it to validate the content of the file
+  - Currently, the schema file is located inside the main repository at path `https://raw.githubusercontent.com/project-gauntlet/gauntlet/refs/heads/main/docs/schema/plugin_manifest.schema.json` but at some point this will change
+
 ## [0.10.0] - 2024-01-19
 - Rename `"command-generator"` into `"entrypoint-generator"`
 - A lot of internal dependency updates
