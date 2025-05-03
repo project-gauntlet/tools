@@ -94,7 +94,7 @@ const Manifest = z.strictObject({
         actions: z.optional(z.array(z.strictObject({
             id: z.string().regex(/^[a-zA-Z0-9]+$/, "Action id can only contain letters and numbers"), // needs to be valid and properly cased js identifier
             description: z.string(),
-            shortcut: z.strictObject({
+            shortcut: z.optional(z.strictObject({
                 key: z.enum([ // only stuff that is present on 60% keyboard
                     "1",
                     "2",
@@ -195,18 +195,21 @@ const Manifest = z.strictObject({
                     "|"
                 ]),
                 kind: z.enum(["main", "alternative"]),
-            })
-        }))).superRefine((value: { id: string, shortcut: { key: string, kind: string } }[] | undefined, ctx) => {
+            }))
+        }))).superRefine((value: { id: string, shortcut?: { key: string, kind: string } }[] | undefined, ctx) => {
             if (value) {
                 const uniqueElements = new Set();
                 const duplicates: { id: string }[] = [];
 
                 for (const item of value) {
-                    let key = `${item.shortcut.key}-${item.shortcut.kind}`;
-                    if (uniqueElements.has(key)) {
-                        duplicates.push(item);
-                    } else {
-                        uniqueElements.add(key);
+                    const shortcut = item.shortcut;
+                    if (shortcut) {
+                        let key = `${shortcut.key}-${shortcut.kind}`;
+                        if (uniqueElements.has(key)) {
+                            duplicates.push(item);
+                        } else {
+                            uniqueElements.add(key);
+                        }
                     }
                 }
 
